@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Garantia - Real Car Amortecedores</title>
+  <style>
+    :root {
+      --vermelho: #d62828;
+      --azul: #003049;
+      --cinza: #1e1e1e;
+      --texto: #f8f9fa;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--cinza);
+      color: var(--texto);
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background-color: #2a2a2a;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #000;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      max-width: 200px;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--vermelho);
+      font-size: 22px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: var(--texto);
+    }
+
+    input[type="text"], input[type="date"], textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #555;
+      font-size: 15px;
+      background-color: #333;
+      color: #f8f9fa;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #aaa;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 5px;
+    }
+
+    .group label {
+      font-weight: normal;
+    }
+
+    .extras {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    ul#listaExtras {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+
+    ul#listaExtras li {
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: var(--vermelho);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    @media print {
+      body {
+        font-family: sans-serif;
+        background: white;
+        color: black;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container, .logo, button {
+        display: none !important;
+      }
+
+      #printArea {
+        display: block !important;
+        width: 300px;
+        margin: auto;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      #printArea b {
+        font-size: 17px;
+      }
+    }
+
+    #printArea {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="realcarsemfundo.jpg" alt="Logo Real Car" class="logo" />
+    <h1>Garantia de Serviço</h1>
+
+    <label>Veículo:
+      <input type="text" id="veiculo">
+    </label>
+
+    <label>Placa:
+      <input type="text" id="placa">
+    </label>
+
+    <label>Amortecedor Dianteiro:</label>
+    <div class="group">
+      <label><input type="radio" name="dianteiro" value="Direito"> Direito</label>
+      <label><input type="radio" name="dianteiro" value="Esquerdo"> Esquerdo</label>
+      <label><input type="radio" name="dianteiro" value="Par"> Par</label>
+    </div>
+
+    <label>Amortecedor Traseiro:</label>
+    <div class="group">
+      <label><input type="radio" name="traseiro" value="Direito"> Direito</label>
+      <label><input type="radio" name="traseiro" value="Esquerdo"> Esquerdo</label>
+      <label><input type="radio" name="traseiro" value="Par"> Par</label>
+    </div>
+
+    <label>Garantia:</label>
+    <div class="group">
+      <label><input type="radio" name="garantia" value="3 meses"> 3 meses</label>
+      <label><input type="radio" name="garantia" value="6 meses"> 6 meses</label>
+      <label><input type="radio" name="garantia" value="1 ano"> 1 ano</label>
+    </div>
+
+    <label>Data de Venda:
+      <input type="date" id="data">
+    </label>
+
+    <label>Valor Base:
+      <input type="text" id="valorBase">
+    </label>
+
+    <label>Serviços Extras:</label>
+    <div class="extras">
+      <input type="text" id="nomeExtra" placeholder="Serviço" style="flex:2; height:38px; font-size:15px;">
+      <input type="text" id="valorExtra" placeholder="Valor" style="flex:1; height:38px; font-size:15px;">
+      <button type="button" onclick="addServicoExtra()" style="width:40px; height:38px; font-size:18px; background: var(--vermelho); color:white; border:none; border-radius:5px; cursor:pointer;">+</button>
+    </div>
+    <ul id="listaExtras"></ul>
+
+    <label><b>Total:</b>
+      <input type="text" id="totalCalculado" readonly>
+    </label>
+
+    <button onclick="imprimir()">🖨️ Imprimir Garantia</button>
+  </div>
+
+  <div id="printArea"></div>
+
+  <script>
+    let extras = [];
+
+    window.onload = () => {
+      const hoje = new Date().toISOString().split('T')[0];
+      document.getElementById("data").value = hoje;
+      calcularTotal();
+      document.getElementById("valorBase").addEventListener("input", calcularTotal);
+    };
+
+    function formatar(valor) {
+      const n = parseFloat(valor);
+      if (isNaN(n)) return "0,00";
+      return n.toFixed(2).replace('.', ',');
+    }
+
+    function addServicoExtra() {
+      const nome = document.getElementById("nomeExtra").value.trim();
+      const valor = parseFloat(document.getElementById("valorExtra").value.replace(',', '.'));
+
+      if (!nome || isNaN(valor)) return;
+
+      extras.push({ nome, valor });
+      document.getElementById("nomeExtra").value = "";
+      document.getElementById("valorExtra").value = "";
+      renderExtras();
+      calcularTotal();
+    }
+
+    function renderExtras() {
+      const lista = document.getElementById("listaExtras");
+      lista.innerHTML = "";
+      extras.forEach(e => {
+        const li = document.createElement("li");
+        li.textContent = `- ${e.nome} (R$ ${formatar(e.valor)})`;
+        lista.appendChild(li);
+      });
+    }
+
+    function calcularTotal() {
+      const base = parseFloat(document.getElementById("valorBase").value.replace(',', '.')) || 0;
+      const totalExtras = extras.reduce((s, e) => s + e.valor, 0);
+      const total = base + totalExtras;
+      document.getElementById("totalCalculado").value = total > 0 ? `R$ ${formatar(total)}` : "";
+      return formatar(total);
+    }
+
+    function imprimir() {
+      const veiculo = document.getElementById("veiculo").value || "-";
+      const placa = document.getElementById("placa").value || "-";
+      const dianteiro = document.querySelector('input[name="dianteiro"]:checked')?.value || "-";
+      const traseiro = document.querySelector('input[name="traseiro"]:checked')?.value || "-";
+      const garantia = document.querySelector('input[name="garantia"]:checked')?.value || "-";
+      const data = document.getElementById("data").value || "-";
+      const base = parseFloat(document.getElementById("valorBase").value.replace(',', '.')) || 0;
+      const total = calcularTotal();
+      const listaServicos = extras.length
+        ? extras.map(e => `- ${e.nome} (R$ ${formatar(e.valor)})`).join("<br>")
+        : "Nenhum";
+
+      document.getElementById("printArea").innerHTML = `
+<b>📄 GARANTIA DE SERVIÇO</b><br>
+<b>Veículo:</b> ${veiculo}<br>
+<b>Placa:</b> ${placa}<br><br>
+
+<b>Amortecedor Dianteiro:</b> ${dianteiro}<br>
+<b>Amortecedor Traseiro:</b> ${traseiro}<br><br>
+
+<b>Garantia:</b> ${garantia}<br>
+<b>Data da Venda:</b> ${data}<br>
+<b>Valor Base:</b> R$ ${formatar(base)}<br><br>
+
+<b>🛠️ Serviços Extras:</b><br>${listaServicos}<br><br>
+<b>💰 Total:</b> R$ ${total}<br>
+
+<br>-------------------------------<br>
+🔧 <b>Real Car Amortecedores</b><br>
+Distrito Mecânico - Box 15<br>
+João Pessoa - PB<br>
+📞 (83) 99860-5077<br>
+-------------------------------<br><br>
+
+<b>Assinatura:</b> __________________
+      `;
+
+      setTimeout(() => {
+        window.print();
+      }, 100);
+    }
+  </script>
+</body>
+</html>
