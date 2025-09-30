@@ -201,7 +201,7 @@
     let extras = [];
 
     window.onload = () => {
-      const hoje = new Date().toISOString().split('T')[0];
+      const hoje = new Date().toLocaleDateString('fr-CA');
       document.getElementById("data").value = hoje;
       calcularTotal();
       document.getElementById("valorBase").addEventListener("input", calcularTotal);
@@ -289,6 +289,3 @@ João Pessoa - PB<br>
   </script>
 </body>
 </html>
-
-
-
