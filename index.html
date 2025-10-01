@@ -7,7 +7,6 @@
   <style>
     :root {
       --vermelho: #d62828;
-      --azul: #003049;
       --cinza: #1e1e1e;
       --texto: #f8f9fa;
     }
@@ -48,7 +47,7 @@
       color: var(--texto);
     }
 
-    input[type="text"], input[type="date"], textarea {
+    input[type="text"], input[type="date"] {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -59,23 +58,16 @@
       color: #f8f9fa;
     }
 
-    input::placeholder, textarea::placeholder {
-      color: #aaa;
-    }
-
-    textarea {
-      resize: vertical;
-    }
-
     .group {
       display: flex;
       flex-wrap: wrap;
       gap: 15px;
       margin-top: 5px;
+      font-weight: normal;
     }
 
-    .group label {
-      font-weight: normal;
+    .group input[type="radio"] {
+      transform: translateY(1px);
     }
 
     .extras {
@@ -84,18 +76,37 @@
       margin-top: 10px;
     }
 
+    .extras input[type="text"] {
+      height: 38px;
+      padding: 8px;
+      font-size: 15px;
+      border-radius: 5px;
+      border: 1px solid #555;
+      background-color: #333;
+      color: #f8f9fa;
+    }
+
+    .extras button {
+      width: 40px;
+      height: 38px;
+      font-size: 18px;
+      background: var(--vermelho);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
     ul#listaExtras {
       margin-top: 10px;
       padding-left: 20px;
     }
 
-    ul#listaExtras li {
-      font-size: 14px;
-    }
+    ul#listaExtras li { font-size: 14px; }
 
     button {
       width: 100%;
-      margin-top: 25px;
+      margin-top: 15px;
       padding: 12px;
       font-size: 16px;
       font-weight: bold;
@@ -108,34 +119,24 @@
 
     @media print {
       body {
-        font-family: sans-serif;
         background: white;
         color: black;
-        margin: 0;
-        padding: 0;
+        font-family: Arial, sans-serif;
       }
-
       .container, .logo, button {
         display: none !important;
       }
-
       #printArea {
         display: block !important;
-        width: 300px;
-        margin: auto;
-        padding: 10px;
-        font-size: 16px;
-        line-height: 1.6;
-      }
-
-      #printArea b {
-        font-size: 17px;
+        color: black !important;
+        font-size: 15px;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        white-space: pre-wrap; /* mantém as quebras de linha */
       }
     }
 
-    #printArea {
-      display: none;
-    }
+    #printArea { display: none; }
   </style>
 </head>
 <body>
@@ -144,32 +145,32 @@
     <h1>Garantia de Serviço</h1>
 
     <label>Veículo:
-      <input type="text" id="veiculo">
+      <input type="text" id="veiculo" placeholder="Ex: Corsa Sedan 1.6 2010">
     </label>
 
     <label>Placa:
-      <input type="text" id="placa">
+      <input type="text" id="placa" placeholder="Ex: ABC1D23">
     </label>
 
     <label>Amortecedor Dianteiro:</label>
-    <div class="group">
-      <label><input type="radio" name="dianteiro" value="Direito"> Direito</label>
-      <label><input type="radio" name="dianteiro" value="Esquerdo"> Esquerdo</label>
-      <label><input type="radio" name="dianteiro" value="Par"> Par</label>
+    <div class="group" id="grpDianteiro">
+      <label><input type="radio" id="dianteiroDir" name="dianteiro" value="Direito"> Direito</label>
+      <label><input type="radio" id="dianteiroEsq" name="dianteiro" value="Esquerdo"> Esquerdo</label>
+      <label><input type="radio" id="dianteiroPar" name="dianteiro" value="Par"> Par</label>
     </div>
 
     <label>Amortecedor Traseiro:</label>
-    <div class="group">
-      <label><input type="radio" name="traseiro" value="Direito"> Direito</label>
-      <label><input type="radio" name="traseiro" value="Esquerdo"> Esquerdo</label>
-      <label><input type="radio" name="traseiro" value="Par"> Par</label>
+    <div class="group" id="grpTraseiro">
+      <label><input type="radio" id="traseiroDir" name="traseiro" value="Direito"> Direito</label>
+      <label><input type="radio" id="traseiroEsq" name="traseiro" value="Esquerdo"> Esquerdo</label>
+      <label><input type="radio" id="traseiroPar" name="traseiro" value="Par"> Par</label>
     </div>
 
     <label>Garantia:</label>
-    <div class="group">
-      <label><input type="radio" name="garantia" value="3 meses"> 3 meses</label>
-      <label><input type="radio" name="garantia" value="6 meses"> 6 meses</label>
-      <label><input type="radio" name="garantia" value="1 ano"> 1 ano</label>
+    <div class="group" id="grpGarantia">
+      <label><input type="radio" id="garantia3m" name="garantia" value="3 meses"> 3 meses</label>
+      <label><input type="radio" id="garantia6m" name="garantia" value="6 meses"> 6 meses</label>
+      <label><input type="radio" id="garantia1a" name="garantia" value="1 ano"> 1 ano</label>
     </div>
 
     <label>Data de Venda:
@@ -177,14 +178,14 @@
     </label>
 
     <label>Valor Base:
-      <input type="text" id="valorBase">
+      <input type="text" id="valorBase" placeholder="Ex: 600,00">
     </label>
 
     <label>Serviços Extras:</label>
     <div class="extras">
-      <input type="text" id="nomeExtra" placeholder="Serviço" style="flex:2; height:38px; font-size:15px;">
-      <input type="text" id="valorExtra" placeholder="Valor" style="flex:1; height:38px; font-size:15px;">
-      <button type="button" onclick="addServicoExtra()" style="width:40px; height:38px; font-size:18px; background: var(--vermelho); color:white; border:none; border-radius:5px; cursor:pointer;">+</button>
+      <input type="text" id="nomeExtra" placeholder="Serviço" style="flex:2;">
+      <input type="text" id="valorExtra" placeholder="Valor" style="flex:1;">
+      <button type="button" id="btnAdd" onclick="addServicoExtra()">+</button>
     </div>
     <ul id="listaExtras"></ul>
 
@@ -192,7 +193,12 @@
       <input type="text" id="totalCalculado" readonly>
     </label>
 
+    <label>Telefone do Cliente (com DDD):
+      <input type="text" id="telefoneCliente" placeholder="Ex: 83991234567">
+    </label>
+
     <button onclick="imprimir()">🖨️ Imprimir Garantia</button>
+    <button onclick="enviarWhatsApp()">📤 Enviar por WhatsApp</button>
   </div>
 
   <div id="printArea"></div>
@@ -200,11 +206,71 @@
   <script>
     let extras = [];
 
+    // ordem EXPLÍCITA dos campos (do começo ao fim)
+    function getOrder() {
+      return [
+        document.getElementById('veiculo'),
+        document.getElementById('placa'),
+        document.getElementById('dianteiroDir'),
+        document.getElementById('dianteiroEsq'),
+        document.getElementById('dianteiroPar'),
+        document.getElementById('traseiroDir'),
+        document.getElementById('traseiroEsq'),
+        document.getElementById('traseiroPar'),
+        document.getElementById('garantia3m'),
+        document.getElementById('garantia6m'),
+        document.getElementById('garantia1a'),
+        document.getElementById('data'),
+        document.getElementById('valorBase'),
+        document.getElementById('nomeExtra'),
+        document.getElementById('valorExtra'),
+        document.getElementById('telefoneCliente'),
+      ].filter(Boolean);
+    }
+
+    function focusNext(currentEl) {
+      const order = getOrder();
+      const i = order.indexOf(currentEl);
+      if (i > -1 && i < order.length - 1) {
+        order[i + 1].focus();
+      } else if (i === order.length - 1) {
+        currentEl.blur(); // último campo
+      }
+    }
+
     window.onload = () => {
+      // data default + total
       const hoje = new Date().toLocaleDateString('fr-CA');
       document.getElementById("data").value = hoje;
       calcularTotal();
       document.getElementById("valorBase").addEventListener("input", calcularTotal);
+
+      // ENTER em todos os inputs da ordem definida
+      getOrder().forEach((el) => {
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+
+            if (el.id === 'valorExtra') {
+              // adiciona serviço e volta pro nome
+              addServicoExtra();
+              document.getElementById('nomeExtra').focus();
+              return;
+            }
+
+            focusNext(el);
+          }
+        });
+      });
+
+      // ENTER no botão "+" também adiciona (opcional)
+      document.getElementById('btnAdd').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addServicoExtra();
+          document.getElementById('nomeExtra').focus();
+        }
+      });
     };
 
     function formatar(valor) {
@@ -244,7 +310,7 @@
       return formatar(total);
     }
 
-    function imprimir() {
+    function gerarTextoGarantia() {
       const veiculo = document.getElementById("veiculo").value || "-";
       const placa = document.getElementById("placa").value || "-";
       const dianteiro = document.querySelector('input[name="dianteiro"]:checked')?.value || "-";
@@ -254,37 +320,76 @@
       const base = parseFloat(document.getElementById("valorBase").value.replace(',', '.')) || 0;
       const total = calcularTotal();
       const listaServicos = extras.length
-        ? extras.map(e => `- ${e.nome} (R$ ${formatar(e.valor)})`).join("<br>")
+        ? extras.map(e => `- ${e.nome} (R$ ${formatar(e.valor)})`).join("\n")
         : "Nenhum";
 
-      document.getElementById("printArea").innerHTML = `
-<b>📄 GARANTIA DE SERVIÇO</b><br>
-<b>Veículo:</b> ${veiculo}<br>
-<b>Placa:</b> ${placa}<br><br>
+      // Calcula validade pela garantia
+      let validade = "-";
+      if (data !== "-") {
+        const d = new Date(data);
+        if (garantia === "3 meses") d.setMonth(d.getMonth() + 3);
+        if (garantia === "6 meses") d.setMonth(d.getMonth() + 6);
+        if (garantia === "1 ano") d.setFullYear(d.getFullYear() + 1);
+        validade = d.toLocaleDateString('pt-BR');
+      }
 
-<b>Amortecedor Dianteiro:</b> ${dianteiro}<br>
-<b>Amortecedor Traseiro:</b> ${traseiro}<br><br>
+      return `GARANTIA DE SERVIÇO
 
-<b>Garantia:</b> ${garantia}<br>
-<b>Data da Venda:</b> ${data}<br>
-<b>Valor Base:</b> R$ ${formatar(base)}<br><br>
+Veículo: ${veiculo}
+Placa: ${placa}
 
-<b>🛠️ Serviços Extras:</b><br>${listaServicos}<br><br>
-<b>💰 Total:</b> R$ ${total}<br>
+Amortecedor Dianteiro: ${dianteiro}
+Amortecedor Traseiro: ${traseiro}
 
-<br>-------------------------------<br>
-🔧 <b>Real Car Amortecedores</b><br>
-Distrito Mecânico - Box 15<br>
-João Pessoa - PB<br>
-📞 (83) 99860-5077<br>
--------------------------------<br><br>
+Garantia: ${garantia}
+Data da Venda: ${data}
+Validade até: ${validade}
 
-<b>Assinatura:</b> __________________
-      `;
+Valor Base: R$ ${formatar(base)}
 
-      setTimeout(() => {
-        window.print();
-      }, 100);
+Serviços Extras:
+${listaServicos}
+
+Total: R$ ${total}
+
+-----------------------------
+Real Car Amortecedores
+Distrito Mecânico - Box 15
+João Pessoa - PB
+(83) 99860-5077
+-----------------------------`;
+    }
+
+    function imprimir() {
+      document.getElementById("printArea").innerText = gerarTextoGarantia();
+      setTimeout(() => window.print(), 100);
+    }
+
+    // WhatsApp: mensagem institucional (sem os dados da garantia)
+    function enviarWhatsApp() {
+      let numero = document.getElementById("telefoneCliente").value.trim();
+      if (!numero) {
+        alert("Informe o número do cliente com DDD (ex: 83991234567).");
+        return;
+      }
+      numero = numero.replace(/\D/g, "");
+      if (numero.length < 10) {
+        alert("Número inválido. Use DDD + número.");
+        return;
+      }
+
+      const mensagem = encodeURIComponent(
+        "Olá! Aqui é da Real Car Amortecedores.\n\n" +
+        "Segue abaixo a garantia referente ao serviço realizado no seu veículo.\n\n" +
+        "Real Car Amortecedores\n" +
+        "Distrito Mecânico - Box 15\n" +
+        "João Pessoa - PB\n" +
+        "(83) 99860-5077\n\n" +
+        "Qualquer dúvida, estamos à disposição!"
+      );
+
+      const url = `https://wa.me/55${numero}?text=${mensagem}`;
+      window.open(url, "_blank");
     }
   </script>
 </body>
