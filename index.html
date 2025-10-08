@@ -10,7 +10,6 @@
       --cinza: #1e1e1e;
       --texto: #f8f9fa;
     }
-
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,7 +17,6 @@
       color: var(--texto);
       padding: 20px;
     }
-
     .container {
       max-width: 500px;
       margin: auto;
@@ -27,26 +25,22 @@
       border-radius: 12px;
       box-shadow: 0 0 10px #000;
     }
-
     .logo {
       display: block;
-      margin: 0 auto 20px auto;
-      max-width: 200px;
+      margin: 0 auto 10px auto;
+      max-width: 220px;
     }
-
     h1 {
       text-align: center;
       color: var(--vermelho);
       font-size: 22px;
     }
-
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
       color: var(--texto);
     }
-
     input[type="text"], input[type="date"] {
       width: 100%;
       padding: 8px;
@@ -57,7 +51,6 @@
       background-color: #333;
       color: #f8f9fa;
     }
-
     .group {
       display: flex;
       flex-wrap: wrap;
@@ -65,17 +58,11 @@
       margin-top: 5px;
       font-weight: normal;
     }
-
-    .group input[type="radio"] {
-      transform: translateY(1px);
-    }
-
     .extras {
       display: flex;
       gap: 10px;
       margin-top: 10px;
     }
-
     .extras input[type="text"] {
       height: 38px;
       padding: 8px;
@@ -85,7 +72,6 @@
       background-color: #333;
       color: #f8f9fa;
     }
-
     .extras button {
       width: 40px;
       height: 38px;
@@ -96,14 +82,8 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
-    ul#listaExtras {
-      margin-top: 10px;
-      padding-left: 20px;
-    }
-
+    ul#listaExtras { margin-top: 10px; padding-left: 20px; }
     ul#listaExtras li { font-size: 14px; }
-
     button {
       width: 100%;
       margin-top: 15px;
@@ -117,26 +97,36 @@
       cursor: pointer;
     }
 
+    /* ----- IMPRESSÃO ----- */
     @media print {
       body {
         background: white;
         color: black;
         font-family: Arial, sans-serif;
       }
-      .container, .logo, button {
+      .container, button {
         display: none !important;
+      }
+      #printWrapper {
+        display: block !important;
+        text-align: center;
+      }
+      #printLogo {
+        display: block !important;
+        width: 220px;
+        margin: 0 auto 10px auto;
       }
       #printArea {
         display: block !important;
         color: black !important;
         font-size: 15px;
-        padding: 20px;
+        text-align: left;
         font-family: Arial, sans-serif;
-        white-space: pre-wrap; /* mantém as quebras de linha */
+        white-space: pre-wrap;
+        padding: 10px 20px;
       }
     }
-
-    #printArea { display: none; }
+    #printWrapper { display: none; }
   </style>
 </head>
 <body>
@@ -153,24 +143,26 @@
     </label>
 
     <label>Amortecedor Dianteiro:</label>
-    <div class="group" id="grpDianteiro">
-      <label><input type="radio" id="dianteiroDir" name="dianteiro" value="Direito"> Direito</label>
-      <label><input type="radio" id="dianteiroEsq" name="dianteiro" value="Esquerdo"> Esquerdo</label>
-      <label><input type="radio" id="dianteiroPar" name="dianteiro" value="Par"> Par</label>
+    <div class="group">
+      <label><input type="checkbox" id="dianteiroDir"> Direito</label>
+      <label><input type="checkbox" id="dianteiroEsq"> Esquerdo</label>
+      <label><input type="checkbox" id="dianteiroPar"> Par</label>
     </div>
 
     <label>Amortecedor Traseiro:</label>
-    <div class="group" id="grpTraseiro">
-      <label><input type="radio" id="traseiroDir" name="traseiro" value="Direito"> Direito</label>
-      <label><input type="radio" id="traseiroEsq" name="traseiro" value="Esquerdo"> Esquerdo</label>
-      <label><input type="radio" id="traseiroPar" name="traseiro" value="Par"> Par</label>
+    <div class="group">
+      <label><input type="checkbox" id="traseiroDir"> Direito</label>
+      <label><input type="checkbox" id="traseiroEsq"> Esquerdo</label>
+      <label><input type="checkbox" id="traseiroPar"> Par</label>
     </div>
 
+    <label><input type="checkbox" id="amortecedorCentral"> Amortecedor Central</label>
+
     <label>Garantia:</label>
-    <div class="group" id="grpGarantia">
-      <label><input type="radio" id="garantia3m" name="garantia" value="3 meses"> 3 meses</label>
-      <label><input type="radio" id="garantia6m" name="garantia" value="6 meses"> 6 meses</label>
-      <label><input type="radio" id="garantia1a" name="garantia" value="1 ano"> 1 ano</label>
+    <div class="group">
+      <label><input type="checkbox" id="garantia3m"> 3 meses</label>
+      <label><input type="checkbox" id="garantia6m"> 6 meses</label>
+      <label><input type="checkbox" id="garantia1a"> 1 ano</label>
     </div>
 
     <label>Data de Venda:
@@ -201,75 +193,27 @@
     <button onclick="enviarWhatsApp()">📤 Enviar por WhatsApp</button>
   </div>
 
-  <div id="printArea"></div>
+  <!-- Área da impressão -->
+  <div id="printWrapper">
+    <img id="printLogo" src="realcarsemfundo.jpg" alt="Logo Real Car (Impressão)">
+    <div id="printArea"></div>
+  </div>
 
   <script>
     let extras = [];
 
-    // ordem EXPLÍCITA dos campos (do começo ao fim)
-    function getOrder() {
-      return [
-        document.getElementById('veiculo'),
-        document.getElementById('placa'),
-        document.getElementById('dianteiroDir'),
-        document.getElementById('dianteiroEsq'),
-        document.getElementById('dianteiroPar'),
-        document.getElementById('traseiroDir'),
-        document.getElementById('traseiroEsq'),
-        document.getElementById('traseiroPar'),
-        document.getElementById('garantia3m'),
-        document.getElementById('garantia6m'),
-        document.getElementById('garantia1a'),
-        document.getElementById('data'),
-        document.getElementById('valorBase'),
-        document.getElementById('nomeExtra'),
-        document.getElementById('valorExtra'),
-        document.getElementById('telefoneCliente'),
-      ].filter(Boolean);
-    }
-
-    function focusNext(currentEl) {
-      const order = getOrder();
-      const i = order.indexOf(currentEl);
-      if (i > -1 && i < order.length - 1) {
-        order[i + 1].focus();
-      } else if (i === order.length - 1) {
-        currentEl.blur(); // último campo
-      }
-    }
-
     window.onload = () => {
-      // data default + total
       const hoje = new Date().toLocaleDateString('fr-CA');
       document.getElementById("data").value = hoje;
-      calcularTotal();
       document.getElementById("valorBase").addEventListener("input", calcularTotal);
 
-      // ENTER em todos os inputs da ordem definida
-      getOrder().forEach((el) => {
-        el.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-
-            if (el.id === 'valorExtra') {
-              // adiciona serviço e volta pro nome
-              addServicoExtra();
-              document.getElementById('nomeExtra').focus();
-              return;
-            }
-
-            focusNext(el);
+      const garantias = ["garantia3m", "garantia6m", "garantia1a"];
+      garantias.forEach(id => {
+        document.getElementById(id).addEventListener("change", e => {
+          if (e.target.checked) {
+            garantias.filter(g => g !== id).forEach(g => document.getElementById(g).checked = false);
           }
         });
-      });
-
-      // ENTER no botão "+" também adiciona (opcional)
-      document.getElementById('btnAdd').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          addServicoExtra();
-          document.getElementById('nomeExtra').focus();
-        }
       });
     };
 
@@ -280,11 +224,9 @@
     }
 
     function addServicoExtra() {
-      const nome = document.getElementById("nomeExtra").value.trim();
+      const nome = document.getElementById("nomeExtra").value.trim().toUpperCase();
       const valor = parseFloat(document.getElementById("valorExtra").value.replace(',', '.'));
-
       if (!nome || isNaN(valor)) return;
-
       extras.push({ nome, valor });
       document.getElementById("nomeExtra").value = "";
       document.getElementById("valorExtra").value = "";
@@ -311,21 +253,31 @@
     }
 
     function gerarTextoGarantia() {
-      const veiculo = document.getElementById("veiculo").value || "-";
-      const placa = document.getElementById("placa").value || "-";
-      const dianteiro = document.querySelector('input[name="dianteiro"]:checked')?.value || "-";
-      const traseiro = document.querySelector('input[name="traseiro"]:checked')?.value || "-";
-      const garantia = document.querySelector('input[name="garantia"]:checked')?.value || "-";
+      const veiculo = document.getElementById("veiculo").value.trim().toUpperCase();
+      const placa = document.getElementById("placa").value.trim().toUpperCase();
       const data = document.getElementById("data").value || "-";
       const base = parseFloat(document.getElementById("valorBase").value.replace(',', '.')) || 0;
       const total = calcularTotal();
-      const listaServicos = extras.length
-        ? extras.map(e => `- ${e.nome} (R$ ${formatar(e.valor)})`).join("\n")
-        : "Nenhum";
 
-      // Calcula validade pela garantia
+      const dianteiro = [];
+      if (dianteiroDir.checked) dianteiro.push("Direito");
+      if (dianteiroEsq.checked) dianteiro.push("Esquerdo");
+      if (dianteiroPar.checked) dianteiro.push("Par");
+
+      const traseiro = [];
+      if (traseiroDir.checked) traseiro.push("Direito");
+      if (traseiroEsq.checked) traseiro.push("Esquerdo");
+      if (traseiroPar.checked) traseiro.push("Par");
+
+      const central = document.getElementById("amortecedorCentral").checked ? "Sim" : null;
+
+      let garantia = null;
+      if (garantia3m.checked) garantia = "3 meses";
+      if (garantia6m.checked) garantia = "6 meses";
+      if (garantia1a.checked) garantia = "1 ano";
+
       let validade = "-";
-      if (data !== "-") {
+      if (data !== "-" && garantia) {
         const d = new Date(data);
         if (garantia === "3 meses") d.setMonth(d.getMonth() + 3);
         if (garantia === "6 meses") d.setMonth(d.getMonth() + 6);
@@ -333,31 +285,37 @@
         validade = d.toLocaleDateString('pt-BR');
       }
 
-      return `GARANTIA DE SERVIÇO
+      const agora = new Date();
+      const dataHora = agora.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
 
-Veículo: ${veiculo}
-Placa: ${placa}
+      let texto = "";
+      texto += "---------------------------------\n";
+      texto += "Real Car Amortecedores\n";
+      texto += "Recondicionamos amortecedores para carros nacionais e importados com garantia.\n";
+      texto += "Rua Sargento Lauro Pereira da Silva, S/N - Box 15\n";
+      texto += "Fone: (83) 99860-5077 - João Pessoa - PB\n";
+      texto += "---------------------------------\n\n";
 
-Amortecedor Dianteiro: ${dianteiro}
-Amortecedor Traseiro: ${traseiro}
+      if (veiculo) texto += `Veículo: ${veiculo}\n`;
+      if (placa) texto += `Placa: ${placa}\n`;
+      if (dianteiro.length) texto += `Amortecedor Dianteiro: ${dianteiro.join(", ")}\n`;
+      if (traseiro.length) texto += `Amortecedor Traseiro: ${traseiro.join(", ")}\n`;
+      if (central) texto += `Amortecedor Central: ${central}\n`;
+      if (garantia) texto += `Garantia: ${garantia}\n`;
+      texto += `Data da Venda: ${data}\n`;
+      texto += `Validade até: ${validade}\n`;
+      if (base > 0) texto += `Valor Base: R$ ${formatar(base)}\n`;
 
-Garantia: ${garantia}
-Data da Venda: ${data}
-Validade até: ${validade}
+      if (extras.length) {
+        texto += "Serviços Extras:\n";
+        extras.forEach(e => texto += `- ${e.nome} (R$ ${formatar(e.valor)})\n`);
+      }
 
-Valor Base: R$ ${formatar(base)}
+      texto += `Total: R$ ${total}\n\n`;
+      texto += "Assinatura: ___________________________\n\n";
+      texto += `Emitido em: ${dataHora}\n`;
 
-Serviços Extras:
-${listaServicos}
-
-Total: R$ ${total}
-
------------------------------
-Real Car Amortecedores
-Distrito Mecânico - Box 15
-João Pessoa - PB
-(83) 99860-5077
------------------------------`;
+      return texto;
     }
 
     function imprimir() {
@@ -365,7 +323,6 @@ João Pessoa - PB
       setTimeout(() => window.print(), 100);
     }
 
-    // WhatsApp: mensagem institucional (sem os dados da garantia)
     function enviarWhatsApp() {
       let numero = document.getElementById("telefoneCliente").value.trim();
       if (!numero) {
@@ -377,17 +334,9 @@ João Pessoa - PB
         alert("Número inválido. Use DDD + número.");
         return;
       }
-
       const mensagem = encodeURIComponent(
-        "Olá! Aqui é da Real Car Amortecedores.\n\n" +
-        "Segue abaixo a garantia referente ao serviço realizado no seu veículo.\n\n" +
-        "Real Car Amortecedores\n" +
-        "Distrito Mecânico - Box 15\n" +
-        "João Pessoa - PB\n" +
-        "(83) 99860-5077\n\n" +
-        "Qualquer dúvida, estamos à disposição!"
+        "Olá! Aqui é da Real Car Amortecedores.\n\nSegue abaixo a garantia referente ao serviço realizado no seu veículo.\n\nReal Car Amortecedores\nDistrito Mecânico - Box 15\nJoão Pessoa - PB\n(83) 99860-5077\n\nQualquer dúvida, estamos à disposição!"
       );
-
       const url = `https://wa.me/55${numero}?text=${mensagem}`;
       window.open(url, "_blank");
     }
