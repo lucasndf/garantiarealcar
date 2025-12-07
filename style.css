@@ -1,0 +1,158 @@
+:root {
+  --vermelho: #d62828;
+  --cinza: #1e1e1e;
+  --texto: #f8f9fa;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--cinza);
+  color: var(--texto);
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  background-color: #2a2a2a;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #000;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 20px;
+  max-width: 200px;
+}
+
+.titulo {
+  text-align: center;
+  color: var(--vermelho);
+  font-size: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input[type="text"], input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background-color: #333;
+  color: #fff;
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.extras {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.extra-servico {
+  flex: 2;
+}
+
+.extra-valor {
+  flex: 1;
+}
+
+.extras button {
+  width: 40px;
+  height: 38px;
+  font-size: 18px;
+  background: var(--vermelho);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#listaExtras {
+  margin-top: 10px;
+  padding-left: 0;
+  list-style: none;
+}
+
+#listaExtras li {
+  font-size: 14px;
+  background: #333;
+  padding: 6px 10px;
+  border-radius: 5px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#listaExtras button {
+  background: var(--vermelho);
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 6px;
+}
+
+button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: var(--vermelho);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* IMPRESSÃO TÉRMICA */
+@media print {
+  body {
+    background: white;
+    color: black;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .container, button {
+    display: none !important;
+  }
+
+  #printWrapper {
+    display: block !important;
+    width: 58mm;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #printLogo {
+    width: 160px;
+    margin-bottom: 6px;
+  }
+
+  #printArea {
+    white-space: pre-wrap;
+    line-height: 1.4;
+    text-align: center;
+  }
+}
+
+#printWrapper {
+  display: none;
+}
